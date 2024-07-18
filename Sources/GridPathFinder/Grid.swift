@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol Grid {
+public protocol Grid {
     associatedtype Cell
     
     // Cost function calculation.

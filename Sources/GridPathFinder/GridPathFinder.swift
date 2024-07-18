@@ -8,7 +8,7 @@
 
 // Returns empty Array if no path is found
 
-func shortestPath<CellType: GridCell, GridType: Grid>(from start: CellType, to end: CellType, in grid: GridType) -> [CellType] {
+public func shortestPath<CellType: GridCell, GridType: Grid>(from start: CellType, to end: CellType, in grid: GridType) -> [CellType] {
     
     let h = grid.distance(from: start as! GridType.Cell, destination: end as! GridType.Cell)
     
