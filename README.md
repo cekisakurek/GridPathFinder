@@ -8,20 +8,10 @@ Add this package as a dependency.
 
 
 ```swift
-struct TestGrid: Grid {
-    var cells: [TestGridCell] {
-        var temp = [TestGridCell]()
-        let rowCount = 5000
-        let columnCount = 5000
-        for i in 0..<columnCount {
-            for j in 0..<rowCount {
-                let cell = TestGridCell(xValue: i, yValue: j)
-                temp.append(cell)
-            }
-        }
-        return temp
-    }
+struct MyGrid: Grid {
+    var cells: [TestGridCell]
     
+    // Cost function implementation
     func moveCostFrom(cell: TestGridCell, to: TestGridCell) -> Double {
         return 1.0
     }
@@ -32,18 +22,7 @@ struct TestGrid: Grid {
 struct TestGridCell: GridCell {
     var id: String { "\(xValue)-\(yValue)" }
     
-    var adjacentCells: [TestGridCell] {
-        [
-            TestGridCell(xValue: max(xValue - 1, 0), yValue: max(yValue - 1, 0)),
-            TestGridCell(xValue: xValue, yValue: max(yValue - 1, 0)),
-            TestGridCell(xValue: xValue + 1, yValue: max(yValue - 1, 0)),
-            TestGridCell(xValue: max(xValue - 1, 0), yValue: yValue),
-            TestGridCell(xValue: max(xValue - 1, 0), yValue: yValue + 1),
-            TestGridCell(xValue: xValue + 1, yValue: yValue),
-            TestGridCell(xValue: xValue, yValue: yValue + 1),
-            TestGridCell(xValue: xValue + 1, yValue: yValue + 1)
-        ]
-    }
+    var adjacentCells: [TestGridCell]
     
     let xValue: Int
     
@@ -52,5 +31,16 @@ struct TestGridCell: GridCell {
     var isWalkable: Bool = true
     
     var title: String = ""
+}
+```
+
+If you want to change the default heuristics function you can do with 
+ 
+```swift
+extension MyGrid {
+    
+    func distance(from fromCell: Cell, destination targetCell: Cell) -> Double {
+        ...
+    }
 }
 ```

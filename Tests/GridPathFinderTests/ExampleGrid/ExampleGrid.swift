@@ -52,5 +52,10 @@ struct TestGridCell: GridCell {
     var title: String = ""
 }
 
+extension TestGrid {
+    func distance(from fromCell: TestGridCell, destination targetCell: TestGridCell) -> Double {
+        return 0
+    }
+}
 
 
