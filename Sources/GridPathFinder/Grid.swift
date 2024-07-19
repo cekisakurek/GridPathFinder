@@ -24,7 +24,7 @@ public protocol Grid {
 public extension Grid where Cell: GridCell {
 
     // Default heuristics implementation.
-    func distance(from fromCell: any GridCell, destination targetCell: any GridCell) -> Double {
+    func distance(from fromCell: some GridCell, destination targetCell: some GridCell) -> Double {
         
         // http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html
         // When D = 1 and D2 = 1, this is called the Chebyshev distance.
