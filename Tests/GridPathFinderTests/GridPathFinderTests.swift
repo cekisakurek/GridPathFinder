@@ -2,7 +2,7 @@ import XCTest
 @testable import GridPathFinder
 
 final class GridPathFinderTests: XCTestCase {
-   
+    
     func testDiagonal() throws {
         let methodStart = Date()
         let grid = TestGrid()
@@ -20,8 +20,7 @@ final class GridPathFinderTests: XCTestCase {
         
         let methodFinish = Date()
         let executionTime = methodFinish.timeIntervalSince(methodStart)
-        print("Perf time: \(executionTime)")
- 
+        print("Perf time: \(executionTime)") 
     }
     
     func testMeasureDiagonal() async throws {

@@ -8,50 +8,77 @@
 
 // Returns empty Array if no path is found
 
+struct QueueItem<CellType: GridCell>: Equatable, Comparable {
+    static func < (lhs: QueueItem<CellType>, rhs: QueueItem<CellType>) -> Bool {
+        if lhs == rhs {
+            return lhs.score < rhs.score
+        } else {
+            return false
+        }
+    }
+    
+    static func == (lhs: QueueItem, rhs: QueueItem) -> Bool {
+        lhs.cell.xValue == rhs.cell.xValue && lhs.cell.yValue == rhs.cell.yValue
+//
+    }
+    
+    let cell: CellType
+    let score: Double
+}
+
+
 public func shortestPath<CellType: GridCell, GridType: Grid>(from start: CellType, to end: CellType, in grid: GridType) -> [CellType] {
     
     let h = grid.distance(from: start as! GridType.Cell, destination: end as! GridType.Cell)
     
-    var openSet = [CellType: Double]()
-    openSet[start] = h
+    let startingQueueItem = QueueItem(cell: start, score: h)
     
+    var openSet = PriorityQueue(ascending: true, startingValues: [startingQueueItem])
+    var openIds = Set<CellType.ID>()
+    openIds.insert(start.id)
+        
     var cameFrom = [CellType: CellType]()
     
     var gScores = [CellType.ID: Double]()
     gScores[start.id] = 0
         
     while !openSet.isEmpty {
-        let current = openSet.min(by: { $0.value < $1.value })!
+        let current = openSet.pop()
         
-        if current.key == end {
-            let path = reconstructPath(current: current.key, map: cameFrom)
+        
+        guard let current else { continue }
+        
+        openIds.remove(current.cell.id)
+        
+        if current == QueueItem(cell: end, score: 0) {
+            let path = reconstructPath(current: current.cell, map: cameFrom)
             return path
         }
-        openSet.removeValue(forKey: current.key)
         
-        for neighbor in current.key.adjacentCells {
-            let d = grid.moveCostFrom(cell: current.key as! GridType.Cell , to: neighbor as! GridType.Cell)
+        for neighbor in current.cell.adjacentCells {
+            let d = grid.moveCostFrom(cell: current.cell as! GridType.Cell , to: neighbor as! GridType.Cell)
             if d == Double.infinity {
                 continue
             }
-            let gScore = gScores[current.key.id]! + d
-            if gScore < gScores[neighbor.id] ?? Double.infinity {
-                cameFrom[neighbor] = current.key
+            let gScore = gScores[current.cell.id ]! + d
+            if gScore < gScores[neighbor.id ] ?? Double.infinity {
+                cameFrom[neighbor] = current.cell
                 gScores[neighbor.id] = gScore
-                if openSet[neighbor] == nil {
-                    let fScore = gScore + grid.distance(from: current.key as! GridType.Cell, destination: end as! GridType.Cell)
-                    openSet[neighbor] = fScore
-                    
+                
+                let fScore = gScore + grid.distance(from: current.cell as! GridType.Cell, destination: end as! GridType.Cell)
+                let queueItem = QueueItem(cell: neighbor, score: fScore)
+                if !openIds.contains(queueItem.cell.id) {
+                    openSet.push(queueItem)
+                    openIds.insert(queueItem.cell.id)
                 }
             }
         }
-       
     }
-    
     return []
 }
-
+import Foundation
 private func reconstructPath<CellType: GridCell>(current: CellType, map: [CellType: CellType]) -> [CellType] {
+    let methodStart = Date()
     var path = [CellType]()
     path.append(current)
     var current = current
@@ -59,5 +86,8 @@ private func reconstructPath<CellType: GridCell>(current: CellType, map: [CellTy
         current = next
         path.append(current)
     }
+    let methodFinish = Date()
+    let executionTime = methodFinish.timeIntervalSince(methodStart)
+    print("Perf time: \(executionTime)")
     return path.reversed()
 }
