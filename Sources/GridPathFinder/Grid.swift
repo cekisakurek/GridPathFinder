@@ -21,7 +21,7 @@ public protocol Grid {
     var cells: [Cell] { get }
 }
 
-extension Grid {
+public extension Grid {
 
     // Default heuristics implementation.
     func distance(from fromCell: any GridCell, destination targetCell: any GridCell) -> Double {
