@@ -16,7 +16,7 @@ public protocol Grid {
     func moveCostFrom(cell: Cell, to: Cell) -> Double
     
     // estimates the cost to reach goal from node n
-    func distance1(from fromCell: Cell, destination targetCell: Cell) -> Double
+    func distance(from fromCell: Cell, destination targetCell: Cell) -> Double
     
     var cells: [Cell] { get }
 }
